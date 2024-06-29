@@ -1,5 +1,6 @@
 import { AddProduct } from "../../components/AddProduct";
+import {Wrapper} from "../../components/Wrapper"
 
 export default function Test() {
-  return <AddProduct />;
+  return <Wrapper><AddProduct /></Wrapper>;
 }

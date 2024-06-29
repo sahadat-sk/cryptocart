@@ -1,7 +1,9 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-
+import {Input} from "./ui/input"
+import {Label} from "./ui/label"
+import {Button} from "./ui/button"
 import { useConnectModal } from "@rainbow-me/rainbowkit";
 import { toast } from "react-toastify";
 import { useAddProduct, useGetAllProducts } from "@/app/hooks/useEcommerce";
@@ -56,59 +58,46 @@ const AddProduct = () => {
   return (
     <div className="space-y-8">
       <div className="space-y-8">
-        <div className="flex flex-col space-y-4">
-          <div className="w-64">
-            <label>Name</label>
-            <input
+        <div className="flex flex-col items-center space-y-4">
+          <div className="max-w-2xl grid gap-4">
+<div className="grid gap-2">
+            <Label>Name</Label>
+            <Input
               name="name"
               onChange={(e) => handleChange(e)}
               value={newProduct.name}
+              className="w-full"
             />
-            <label>description</label>
-            <input
+</div>
+
+<div className="grid gap-2">
+            <Label>Description</Label>
+            <Input
               name="description"
-              onChange={handleChange}
+              onChange={(e) => handleChange(e)}
               value={newProduct.description}
+              className="w-full"
             />
-            <label>price</label>
-            <input
+</div>
+
+<div className="grid gap-2">
+            <Label>Price</Label>
+            <Input
               name="price"
-              onChange={handleChange}
+              onChange={(e) => handleChange(e)}
               value={newProduct.price}
+              className="w-full"
             />
+</div>
           </div>
-          <button
-            className="bg-blue-600 hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed text-white py-4 px-8 rounded-md"
+          <Button
             onClick={setGreeting}
             disabled={!address || setGreetingLoading || prepareSetGreetingError}
           >
             {!setGreetingLoading
-              ? `Set your new greeting on the blockchain`
-              : `Setting greeting...`}
-          </button>
-          {!address && (
-            <button
-              className="text-sm text-gray-500 text-center underline hover:opacity-80"
-              onClick={openConnectModal}
-            >
-              Connect your wallet to set a new greeting
-            </button>
-          )}
-          {address && !newGreeting && (
-            <p className="text-sm text-gray-500 text-center">
-              Type something to set a new greeting
-            </p>
-          )}
-          {setGreetingError && (
-            <p className="text-sm text-red-500 text-center">
-              There was an error setting your new greeting
-            </p>
-          )}
-          {newGreeting && prepareSetGreetingError && (
-            <p className="text-sm text-red-500 text-center">
-              Sorry, only the contract owner can set a greeting
-            </p>
-          )}
+              ? `Add Product`
+              : `Adding.....`}
+          </Button>
         </div>
       </div>
     </div>

@@ -1,14 +1,6 @@
-import { Wrapper } from "../components/Wrapper";
-import { Greeting } from "../components/Greeting";
+import { AddProduct } from "../components/AddProduct";
 
-const Home = () => {
-  return (
-    <main>
-      <Wrapper>
-        <Greeting />
-      </Wrapper>
-    </main>
-  );
-};
+export default function Test() {
+  return <AddProduct />;
+}
 
-export default Home;
