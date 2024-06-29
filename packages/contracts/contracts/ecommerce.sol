@@ -14,6 +14,7 @@ contract Ecommerce {
     mapping(uint => Product) public products;
     uint public productCount;
     mapping(address => bool) public admins;
+    mapping(address => uint[]) public sellerProducts;
 
     constructor() {
         admins[msg.sender] = true;
@@ -57,6 +58,10 @@ contract Ecommerce {
             allProducts[i - 1] = products[i];
         }
         return allProducts;
+    }
+
+    function getProductsBySeller(address _seller) public view returns (uint[] memory) {
+        return sellerProducts[_seller];
     }
 
     receive() external payable {}

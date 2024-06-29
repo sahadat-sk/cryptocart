@@ -8,12 +8,7 @@ import {
   useWaitForTransactionReceipt,
 } from "wagmi";
 import abi from "../abi/ecommerce.json";
-
-type Product = {
-  name: string;
-  description: string;
-  price: number;
-};
+import { parseEther } from "viem";
 
 const useAddProduct = ({
   productDetails,
@@ -81,4 +76,68 @@ const useGetAllProducts = () => {
   };
 };
 
-export { useAddProduct, useGetAllProducts };
+const useBuyProduct = ({
+  productDetails,
+}: {
+  productDetails: { id: string; price: string };
+}): {
+  address: `0x${string}` | undefined;
+  buyProduct: (() => void) | undefined;
+  isLoading: boolean;
+  isError: boolean;
+} => {
+  const { address } = useAccount();
+
+  const {
+    data: buyProductHash,
+    writeContract: buyProduct,
+    isPending,
+    isError,
+  } = useWriteContract();
+
+  const { isSuccess: txSuccess, isLoading: txLoading } =
+    useWaitForTransactionReceipt({
+      hash: buyProductHash,
+      query: {
+        enabled: Boolean(buyProductHash),
+      },
+    });
+
+  return {
+    address,
+    buyProduct: () =>
+      buyProduct?.({
+        address: process.env.NEXT_PUBLIC_CONTRACT_ADDRESS as `0x${string}`,
+        abi,
+        functionName: "buyProduct",
+        args: [productDetails.id],
+        value: parseEther(productDetails.price.toString()),
+      }),
+    isLoading: isPending || txLoading,
+    isError,
+  };
+};
+
+const useGetMyProducts = () => {
+  const { address } = useAccount();
+  console.log("Address is", address);
+  const {
+    data: products,
+    isLoading,
+    isError,
+    refetch: refetchGreeting,
+  } = useReadContract({
+    address: process.env.NEXT_PUBLIC_CONTRACT_ADDRESS as `0x${string}`,
+    abi,
+    functionName: "getProductsBySeller",
+    args: [address],
+  });
+
+  return {
+    products,
+    isError,
+    isLoading,
+  };
+};
+
+export { useAddProduct, useGetAllProducts, useBuyProduct, useGetMyProducts };
