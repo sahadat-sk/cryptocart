@@ -8,6 +8,12 @@ import { useAddProduct, useGetAllProducts } from "@/app/hooks/useEcommerce";
 
 const AddProduct = () => {
   const [newGreeting, setNewGreeting] = useState<string>("");
+  const [newProduct, setNewProduct] = useState({
+    name: "",
+    description: "",
+    price: 0,
+  });
+
   const newGreetingInputRef = useRef<HTMLInputElement>(null);
 
   const onSetGreetingSuccess = () => {
@@ -31,11 +37,9 @@ const AddProduct = () => {
     prepareSetGreetingError,
     setGreetingError,
   } = useAddProduct({
-    productDetails: { name: "hello", description: "bye", price: 10 },
+    productDetails: newProduct,
   });
 
-  const { products, isError } = useGetAllProducts();
-  console.log("products is", products, isError);
   useEffect(() => {
     if (!address) {
       setNewGreeting("");
@@ -44,27 +48,39 @@ const AddProduct = () => {
 
   const { openConnectModal } = useConnectModal();
 
+  const handleChange = (e: any) => {
+    const { name, value } = e.target;
+    setNewProduct((prev) => ({ ...prev, [name]: value }));
+  };
+
   return (
     <div className="space-y-8">
       <div className="space-y-8">
         <div className="flex flex-col space-y-4">
-          <input
-            className="border p-4 text-center"
-            onChange={(e) => setNewGreeting(e.target.value)}
-            placeholder="Write a new greeting"
-            ref={newGreetingInputRef}
-            disabled={!address}
-            value={newGreeting}
-          />
+          <div className="w-64">
+            <label>Name</label>
+            <input
+              name="name"
+              onChange={(e) => handleChange(e)}
+              value={newProduct.name}
+            />
+            <label>description</label>
+            <input
+              name="description"
+              onChange={handleChange}
+              value={newProduct.description}
+            />
+            <label>price</label>
+            <input
+              name="price"
+              onChange={handleChange}
+              value={newProduct.price}
+            />
+          </div>
           <button
             className="bg-blue-600 hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed text-white py-4 px-8 rounded-md"
             onClick={setGreeting}
-            disabled={
-              !address ||
-              !newGreeting ||
-              setGreetingLoading ||
-              prepareSetGreetingError
-            }
+            disabled={!address || setGreetingLoading || prepareSetGreetingError}
           >
             {!setGreetingLoading
               ? `Set your new greeting on the blockchain`

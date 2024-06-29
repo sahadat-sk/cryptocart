@@ -9,6 +9,12 @@ import {
 } from "wagmi";
 import abi from "../abi/ecommerce.json";
 
+type Product = {
+  name: string;
+  description: string;
+  price: number;
+};
+
 const useAddProduct = ({
   productDetails,
 }: {
@@ -44,7 +50,11 @@ const useAddProduct = ({
         address: process.env.NEXT_PUBLIC_CONTRACT_ADDRESS as `0x${string}`,
         abi,
         functionName: "addProduct",
-        args: ["hi", "hello", 12],
+        args: [
+          productDetails.name,
+          productDetails.description,
+          productDetails.price,
+        ],
       }),
     setGreetingLoading: setGreetingLoading || txLoading,
     prepareSetGreetingError: productDetails === undefined,
